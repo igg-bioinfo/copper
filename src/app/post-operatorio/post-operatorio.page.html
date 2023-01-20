@@ -1,0 +1,588 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Questionario post-operatorio</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h2 class="fontStyleTitle"> Giorno {{visit.day}}</h2>
+  <p *ngIf="isView">compilato in data {{visit.done.data_compilazione | date : dateFormatText}} </p>
+   <div *ngIf="!isView"> 
+<form  [formGroup]="myForm" (ngSubmit)="presentAlertMultipleButtons" novalidate>
+
+  <!-- NRS -->
+  <div *ngIf="controlloPagina==1">
+<ion-item >
+  <h3> Score dolore*: </h3>
+  <select lines="full" formControlName="nrs">
+    <option value="0"> 0 </option>
+    <option value="1"> 1 </option>
+    <option value="2"> 2 </option>
+    <option value="3"> 3 </option>
+    <option value="4"> 4 </option>
+    <option value="5"> 5 </option>
+    <option value="6"> 6 </option>
+    <option value="7"> 7 </option>
+    <option value="8"> 8 </option>
+    <option value="9"> 9 </option>
+    <option value="10"> 10 </option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.nrs.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+  
+  <!-- Frequenza dolore -->
+  <ion-radio-group  formControlName="frequenza" lines="full">
+    <ion-list-header>
+     <h3>Frequenza Dolore* </h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>0 - Nessuna</ion-label>
+      <ion-radio slot="start" required value="0"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>1 - una volta al giorno </ion-label>
+      <ion-radio  slot="start"  value="1"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>2 - due/tre volte al giorno </ion-label>
+      <ion-radio  slot="start"  value="2"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>3 - >3 volte al giorno </ion-label>
+      <ion-radio  slot="start"   value="3"></ion-radio>
+    </ion-item>
+  </ion-radio-group> 
+  <span class="error" *ngIf="checkAnswer && errorCtr.frequenza.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+   <!-- Durata dolore -->
+   <ion-radio-group lines="full" formControlName="durata_dolore">
+    <ion-list-header>
+      <h3> Durata dolore* </h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>0 - meno di 1 ora</ion-label>
+      <ion-radio slot="start" value="0" ></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>1 - poche ore </ion-label>
+      <ion-radio slot="start" value="1"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>2 - metà della giornata </ion-label>
+      <ion-radio slot="start" value="2"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>3 - tutto il giorno </ion-label>
+      <ion-radio slot="start" value="3"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="checkAnswer && errorCtr.durata_dolore.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  <button (click)="avanti()" class="buttonBack">Avanti </button>
+</div>
+
+<div *ngIf="controlloPagina==2"> 
+ 
+
+  <!--Consumo morfina -->
+  <div *ngIf="!patientData.dateDimission"> 
+  <ion-item lines="full">
+    <h3> Consumo di Morfina </h3>
+    <ion-label position="floating" > mg tot </ion-label>
+    <ion-input formControlName="morfina_mg" type="number"></ion-input>
+    <ion-label position="floating"> alle ore: </ion-label>
+    <ion-datetime displayFormat="h:mm a" formControlName="morfina_ore"></ion-datetime>  
+  </ion-item>
+</div>
+
+  <!-- Analgesia fissa ad orari-->
+  <ion-item lines="full">
+    <h3>Analgesia fissa ad orari:</h3>
+    <ion-checkbox slot="end" value:boolean [checked]="false" formControlName="analgesia_fissa"></ion-checkbox> 
+  </ion-item>
+
+    <!--Analgesia al bisogno (non prescrita ad orari)-->
+    <ion-item lines="full">
+      <h3>Analgesia al bisogno (non prescrita ad orari):</h3>
+      <ion-checkbox slot="end"  [checked]="false" formControlName="analgesia_bisogno"></ion-checkbox> 
+    </ion-item>
+
+    <ion-item> 
+      <ion-label> Numero dosi extra/die</ion-label>
+      <ion-input formControlName="analgesia_extra"> </ion-input>
+    </ion-item>
+
+      <!-- Effetti collaterali -->
+
+  <ion-item lines="full" >
+    <h3>Effetti collaterali </h3>
+<ion-checkbox slot="end" (click)="isChecked()" [checked]="false" formControlName="effetti_collaterali"></ion-checkbox> 
+</ion-item>
+
+
+<div *ngIf="checked"> 
+<div *ngFor="let effetto of effettiCollaterali">
+  <ion-item>
+    <ion-label> {{effetto.label}}</ion-label>
+    <ion-checkbox slot="start" [checked]="false" formControlName="{{effetto.nameForm}}" id="{{effetto.nameForm}}" ></ion-checkbox>
+  </ion-item>
+</div>
+<ion-item>
+  <ion-label> Altro</ion-label>
+  <ion-checkbox slot="start" (click)="addAltroEffetto()" id="effetti_collaterali_altro_check" ></ion-checkbox>
+</ion-item>
+<span *ngIf="checked_altro"> 
+  <ion-item>
+    <ion-label>Altri effetti collaterali:</ion-label>
+    <ion-input formControlName="effetti_collaterali_altro" id="effetti_collaterali_altro"></ion-input>
+  </ion-item>
+</span>
+</div>
+
+<button (click)="indietro()" class="buttonBack">Indietro </button>
+  <button (click)="avanti()" class="buttonBack">Avanti </button>
+</div>
+
+
+<div *ngIf="controlloPagina==3">
+
+<!-- YAPFAQ-->
+  <ion-item >
+  <h3> Fare la doccia o il bagno : </h3>
+  <select lines="full" formControlName="YAPFAQ_1">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_1.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Indossare o cambiare vestiti: </h3>
+  <select lines="full" formControlName="YAPFAQ_2">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_2.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3>Lavarmi: </h3>
+  <select lines="full" formControlName="YAPFAQ_3">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_3.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3>Alzarmi dal letto </h3>
+  <select lines="full" formControlName="YAPFAQ_4">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_4.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Andare in giro per la stanza </h3>
+  <select lines="full" formControlName="YAPFAQ_5">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_5.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Lavarmi i capelli: </h3>
+  <select lines="full" formControlName="YAPFAQ_6">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_6.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> uscire dalla stanza: </h3>
+  <select lines="full" formControlName="YAPFAQ_7">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_7.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Essere pronto a far delle cose senza necessità di riposarmi </h3>
+  <select lines="full" formControlName="YAPFAQ_8">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_8.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Infilarmi i pantaloni: </h3>
+  <select lines="full" formControlName="YAPFAQ_9">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_9.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Fare i compiti o delle faccende domestiche: </h3>
+  <select lines="full" formControlName="YAPFAQ_10">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_10.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Girarmi nel letto: </h3>
+  <select lines="full" formControlName="YAPFAQ_11">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_11.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<ion-item >
+  <h3> Infilarmi o cambiare la maglietta: </h3>
+  <select lines="full" formControlName="YAPFAQ_12">
+    <option value="0"> 0 - Facile</option>
+    <option value="1"> 1 - Un pò faticoso </option>
+    <option value="2"> 2 - Piuttosto fatico </option>
+    <option value="3"> 3 - Molto fatico </option>
+    <option value="4"> 4 - Estremamente faticoso</option>
+  </select>
+</ion-item>
+<span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_12.errors?.required">
+  Campo obbligatorio, selezionare una risposta.
+</span>
+
+<button (click)="indietro()" class="buttonBack">Indietro </button>
+<button (click)="avanti()" class="buttonBack">Avanti </button>
+</div>
+
+
+
+<div *ngIf="controlloPagina==4"> 
+
+  <!-- Catetere vescicale 
+  <ion-radio-group lines="full" formControlName="catetere_vescicale">
+    <ion-list-header>
+      <h3>Catetere vescicale*</h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Si</ion-label>
+      <ion-radio slot="start" value="si"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>No</ion-label>
+      <ion-radio slot="start" value="no"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="submitted && errorCtr.catetere_vescicale.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span> -->
+
+  <!-- Giudizio fisioterapia-->
+  <h3> Valutazione fisioterapica </h3>
+
+  <ion-item> 
+    <ion-label>Volume Massimo inspirato (incentivo spirometrico) in ml: </ion-label>
+    <ion-input formControlName="volMax_inspirato"> </ion-input>
+  </ion-item>
+
+
+  <h4> Competenze motorie (SI/NO)</h4>
+ <ion-radio-group lines="full" formControlName="cm_seduto">
+    <ion-list-header>
+      <h3>Seduto</h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Si</ion-label>
+      <ion-radio slot="start" value="si"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>No</ion-label>
+      <ion-radio slot="start" value="no"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="submitted && errorCtr.cm_seduto.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+  <ion-radio-group lines="full" formControlName="cm_seduto_mani">
+    <ion-list-header>
+      <h3>Seduto con mani dietro la nuca</h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Si</ion-label>
+      <ion-radio slot="start" value="si"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>No</ion-label>
+      <ion-radio slot="start" value="no"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="submitted && errorCtr.cm_seduto_mani.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+  <ion-radio-group lines="full" formControlName="cm_deamb">
+    <ion-list-header>
+      <h3>Deambulazione</h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Si</ion-label>
+      <ion-radio slot="start" value="si"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>No</ion-label>
+      <ion-radio slot="start" value="no"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="submitted && errorCtr.cm_seduto.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+  <ion-radio-group lines="full" formControlName="cm_squat">
+    <ion-list-header>
+      <h3>Squat</h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Si</ion-label>
+      <ion-radio slot="start" value="si"></ion-radio>
+    </ion-item>
+
+    <ion-item > 
+      <ion-label>No</ion-label>
+      <ion-radio slot="start" value="no"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="submitted && errorCtr.cm_squat.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+
+  <ion-item lines="full">
+    <ion-label> Giudizio fisioterapista </ion-label>
+    <ion-input formControlName="fisioterapia" type="text"></ion-input>
+  </ion-item>
+  <button (click)="indietro()" class="buttonBack">Indietro </button>
+
+
+
+
+
+  <!-- Invio questionario -->
+  <ion-row>
+    <ion-col>
+      <ion-button (click)="presentAlertMultipleButtons()" color="danger" expand="block" >Invia questionario</ion-button>
+    </ion-col>
+  </ion-row>
+  <span class="error" *ngIf="submitted && !myForm.valid">
+    Campi obbligatori mancanti, selezionare tutti i campi obbligatori per continuare.
+   </span>
+
+  </div>
+</form>
+</div>
+
+
+
+<!-- Questionario in visualizzazione -->
+<div *ngIf="isView" class="day">  
+<!-- Visualizzazione questionario boostarp-->
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Score dolore: 
+    <span class="badge bg-primary rounded-pill">{{visit.done.nrs}} </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+   Frequenza dolore: 
+    <span class="badge bg-primary rounded-pill">{{visit.done.frequenza_dolore}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Durata dolore
+    <span class="badge bg-primary rounded-pill">{{visit.done.durata_dolore}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Consumo di morfina (mg): 
+    <span *ngIf="!patientData.dateDimission" class="badge bg-primary rounded-pill">{{visit.done.consumo_morfina__mg_tot_}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Consumo di morfina alle ore: 
+    <span *ngIf="!patientData.dateDimission" class="badge bg-primary rounded-pill">{{visit.done.consumo_morfina_alle_ore | date: 'hh:mm'}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+   Analgesia fissa: 
+    <span *ngIf="visit.done.analgesia_fissa_ad_orari" class="badge bg-primary rounded-pill"> Si </span>
+    <span *ngIf="!visit.done.analgesia_fissa_ad_orari" class="badge bg-primary rounded-pill"> No </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Analgesia al bisogno: 
+     <span *ngIf="visit.done.analgesia_al_bisogno" class="badge bg-primary rounded-pill"> Si </span>
+     <span *ngIf="!visit.done.analgesia_al_bisogno" class="badge bg-primary rounded-pill"> No </span>
+   </li>
+   <li class="list-group-item d-flex justify-content-between align-items-center">
+    Dosi di analgesia extra: 
+    <span class="badge bg-primary rounded-pill">{{visit.done.dosi_analgesia_al_bisogno}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Effetti collaterali: 
+    <span *ngIf="visit.done.altri_effetti_collaterali && visit.done.nausea" class="badge bg-primary rounded-pill"> Nausea</span>
+    <span *ngIf="visit.done.altri_effetti_collaterali && visit.done.vomito" class="badge bg-primary rounded-pill"> Nausea</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Giudizio fisioterapista: 
+    <span class="badge bg-primary rounded-pill">{{visit.done.giudizio_fisioterapia}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Volume massimo aspirato (ml): 
+    <span class="badge bg-primary rounded-pill">{{visit.done.volume_massimo_inspirato}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Competenze motorie: 
+  </li> 
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Seduto
+    <span class="badge bg-primary rounded-pill">{{visit.done.competenze_motorie_seduto}} </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center"> 
+    Seduto mani dietro alla testa
+    <span class="badge bg-primary rounded-pill">{{visit.done.competenze_motorie_seduto_mani_dietro}} </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center"> 
+    Deambulazione
+      <span class="badge bg-primary rounded-pill">{{visit.done.competenze_motorie_deambulazione }}</span>
+  </li> 
+  <li class="list-group-item d-flex justify-content-between align-items-right"> 
+    Squat
+      <span class="badge bg-primary rounded-pill">{{visit.done.competenze_motorie_squat}} </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Score totale YAPFAQ: 
+    <span class="badge bg-primary rounded-pill">{{visit.done.yapfaq}}</span>
+  </li>
+</ul>
+
+<!----------------------------------------------------------
+<h3> Score dolore: <span class="fontStyle"> {{visit.done.nrs}}</span> </h3>
+<h3>Frequenza dolore: <span class="fontStyle"> {{visit.done.frequenza_dolore}} </span> </h3>
+<h3>Durata dolore: <span class="fontStyle">{{visit.done.durata_dolore}} </span></h3>
+<div *ngIf="!patientData.dateDimission">
+<h3>Consumo di morfina </h3>
+<p>mg: <span class="text" class="fontStyle">{{visit.done.consumo_morfina__mg_tot_}} </span> </p>
+<p>ore: <span class="text" class="fontStyle">{{visit.done.consumo_morfina_alle_ore | date: 'hh:mm'}} </span> </p>
+</div>
+<h3>Analgesia fissa: <span class="fontStyle">{{visit.done.analgesia_fissa_ad_orari}} </span> </h3>
+<h3>Analgesia al bisogno: <span class="fontStyle">{{visit.done.analgesia_al_bisogno}} </span> </h3>
+<h3>Dosi Analgesia extra: <span class="fontStyle">{{visit.done.dosi_analgesia_al_bisogno}} </span></h3>
+<h3>Effetti collaterali: <span class="fontStyle">{{visit.done.altri_effetti_collaterali}} </span> </h3>
+<div *ngIf="visit.done.effetti_collaterali" class="effColl"> -->
+  <!-- <h4>Allodinia:</h4>
+  <p> {{visit.done.allodinia}}</p>
+  <h4>Iperalgesia: </h4>
+  <p> {{visit.done.iperalgesia}}</p>
+  <h4>Parestesie arti inferiori:</h4>
+  <p> {{visit.done.parestesie_arti_inferiori}}</p> -->
+ <!-- <h4>Nausea:</h4>
+  <p class="fontStyle"> {{visit.done.nausea}}</p>
+  <h4>Vomito:</h4>
+  <p class="fontStyle"> {{visit.done.vomito}}</p>
+</div>-->
+<!-- <h3>Catetere vescicale: <span>{{visit.done.catetere_vescicale}} </span></h3> 
+<h3>Giudizio fisioterapia: <span class="fontStyle">{{visit.done.giudizio_fisioterapia}} </span></h3>
+<h3> Volume massimo inspirato: <span class="fontStyle">{{visit.done.volume_massimo_inspirato}} </span></h3>
+<h3>Competenze motorie fisioterapiche</h3>
+<h4> Seduto: <span class="fontStyle">{{visit.done.competenze_motorie_seduto}} </span> </h4>
+<h4> Seduto con mani dietro la testa: <span class="fontStyle">{{visit.done.competenze_motorie_seduto_mani_dietro}} </span> </h4>
+<h4> Deambulazione: <span class="fontStyle">{{visit.done.competenze_motorie_deambulazione}} </span> </h4>
+<h4> Squat: <span class="fontStyle">{{visit.done. competenze_motorie_squat}} </span> </h4>
+<h3> Score totale YAPFAQ: <span class="fontStyle">{{visit.done.yapfaq}} </span></h3>-->
+
+<ion-back-button defaultHref="total-visit"> Home </ion-back-button>
+</div>
+</ion-content>

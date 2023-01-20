@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Homepage</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="d-flex justify-content-between mx-md-2">
+    <div class="mt-auto">
+      <h1 class="day"> Benvenuto <span> {{ patientData.givenName}} </span>, ecco le tue visite: </h1>
+    </div>
+    <div class="mt-auto info" id="btn_info" [routerLink]="['/information']"> 
+       <ion-icon name="information-circle-outline"></ion-icon>
+     </div>
+  </div>
+  
+
+  <!-- <div class="patientData" class="titleData"> Dati personali </div>
+  <div class="patientData" > <span class="patientDataTitle"> Nome:</span> {{ patientData.givenName}}</div>
+  <div class="patientData" > <span class="patientDataTitle"> Data di intervento:</span> {{ patientData.dateStart | date }}</div>
+  <div class="patientData" > <span class="patientDataTitle"> Codice:</span> {{ patientData.code }}</div>
+  <div class="patientData" > <span class="patientDataTitle"> Data dimissioni:</span> {{ patientData.dateDimission | date }}</div>
+  -->
+
+<!-- Tabella visite -->
+<table class="tableVisit" >
+  <tr class="day" class="background"> 
+      <th style="text-align: left"> Visita</th>
+      <th></th>
+      <th style="text-align: left"> Data</th>
+      <th></th>
+  </tr>
+<tr  *ngFor="let visit of visits">  
+  <td > 
+      {{ visit.modelDay }}
+  </td>
+  <td> </td>
+  
+  <td>
+    <span *ngIf="!visit.done">  {{ visit.dateMin == visit.dateMax? (visit.dateMin | date : dateFormatText ) : (visit.dateMin | date: dateFormatText ) + ' / ' + (visit.dateMax | date: dateFormatText )}}</span>
+    <span *ngIf="visit.done">{{ visit.done.data_compilazione | date: dateFormatText}} </span>
+  </td>
+  <td style="text-align:center"> 
+      <button *ngIf="visit.done" class="buttonDet" (click)="selectedVisit(visit)"> Dettagli </button>
+      <button class="buttonComp" *ngIf="!visit.done && today >= convertDate(visit.dateMin) && today <= convertDate(visit.dateMax) " (click)="selectedVisit(visit)"> Compila </button>
+      <span *ngIf="!visit.done && today > convertDate(visit.dateMax)"> <ion-icon name="close" class="buttonNot"></ion-icon> </span>
+  </td>
+ <!--<ion-icon name="close-circle-sharp"></ion-icon> --> 
+</tr>         
+</table>
+
+<div class="divider">  </div>
+
+<p class="footer"> Istituo Giannina Gaslini - Istituto pediatrico di ricovere e cura a carattere scientifico</p>
+<p  class="footer"> Via Gerolamo Gaslini 5, 16147 Genova Italia </p>
+
+</ion-content>

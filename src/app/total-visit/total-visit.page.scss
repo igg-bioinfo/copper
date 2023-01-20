@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@600&display=swap");
+
+.day {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.background{
+    background:linear-gradient(45deg, greenyellow, dodgerblue);
+}
+
+.tableVisit{
+    margin-left: 2em ;
+    margin-right: 2em ;
+	height: 100%;
+	width:80%;
+    font-family: sans-serif;
+}
+.ion-color-favorite {
+    --ion-color-base: #5BC0DE;  
+ }
+
+.divider {
+    background: dodgerblue;
+    box-shadow: 0 2em 5em rgba(0,0,0,0.1);
+    height: 1em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+tr.ColColor { 
+    background-color: #5bc0de77; 
+}
+
+.buttonDet{
+    padding: 15px 32px;
+    background: #fff;
+    color: dodgerblue;
+   
+}
+
+.buttonDet:hover{
+    padding: 15px 32px;
+    background:#fff;
+    color: dodgerblue;
+    border: solid dodgerblue;
+}
+
+
+.buttonComp{
+    background-color: dodgerblue;
+    color: white;
+  padding: 15px 32px;
+}
+
+.buttonComp:hover{
+    background: linear-gradient(45deg, greenyellow, dodgerblue);
+}
+
+.footer{
+    text-align: center;
+    color: rgba(156, 156, 156, 0.863);
+}
+
+.info{
+    font-size: 200%;
+    color:dodgerblue;
+   text-align: end;
+}
+
+.buttonNot{
+    background: #fff;
+    color: dodgerblue;
+   
+}

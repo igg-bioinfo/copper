@@ -1,0 +1,835 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>follow-up</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h2 class="fontStyleTitle"> Giorno {{visit.day}}</h2>
+ <p *ngIf="isView">Compilato in data {{visit.done.data_compilazione | date : dateFormatText}} </p>
+ 
+ <div *ngIf="!isView"> 
+  <form  [formGroup]="myForm" (ngSubmit)="presentAlertMultipleButtons" novalidate>
+    <!-- NRS -->
+  <div *ngIf="controlloPagina==1"> 
+    <ion-item >
+      <h3> Score dolore*: </h3>
+      <select lines="full" formControlName="nrs">
+        <option value="0"> 0 </option>
+        <option value="1"> 1 </option>
+        <option value="2"> 2 </option>
+        <option value="3"> 3 </option>
+        <option value="4"> 4 </option>
+        <option value="5"> 5 </option>
+        <option value="6"> 6 </option>
+        <option value="7"> 7 </option>
+        <option value="8"> 8 </option>
+        <option value="9"> 9 </option>
+        <option value="10"> 10 </option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.nrs.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <!-- Frequenza dolore -->
+  <ion-radio-group  formControlName="frequenza" lines="full">
+    <ion-list-header>
+     <h3>Frequenza Dolore* </h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>0 - Nessuna</ion-label>
+      <ion-radio slot="start" required value="0"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>1 - una volta al giorno </ion-label>
+      <ion-radio  slot="start"  value="1"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>2 - due/tre volte al giorno </ion-label>
+      <ion-radio  slot="start"  value="2"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>3 - >3 volte al giorno </ion-label>
+      <ion-radio  slot="start"   value="3"></ion-radio>
+    </ion-item>
+  </ion-radio-group> 
+  <span class="error" *ngIf="checkAnswer && errorCtr.frequenza.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+
+   <!-- Durata dolore -->
+   <ion-radio-group lines="full" formControlName="durata_dolore">
+    <ion-list-header>
+      <h3> Durata dolore* </h3>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>0 - meno di 1 ora</ion-label>
+      <ion-radio slot="start" value="0" ></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>1 - poche ore </ion-label>
+      <ion-radio slot="start" value="1"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>2 - metà della giornata </ion-label>
+      <ion-radio slot="start" value="2"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>3 - tutto il giorno </ion-label>
+      <ion-radio slot="start" value="3"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <span class="error" *ngIf="checkAnswer && errorCtr.durata_dolore.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  <p></p>
+  <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+<!-- ---------------------------Pagina 2----------------------------------------------->
+  <div *ngIf="controlloPagina==2"> 
+    <!-- YAPFAQ-->
+    <h2> YAPFAQ </h2>
+  <ion-item >
+    <h3> Fare la doccia o il bagno : </h3>
+    <select lines="full" formControlName="YAPFAQ_1">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_1.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Indossare o cambiare vestiti: </h3>
+    <select lines="full" formControlName="YAPFAQ_2">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_2.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3>Lavarmi: </h3>
+    <select lines="full" formControlName="YAPFAQ_3">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_3.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3>Alzarmi dal letto </h3>
+    <select lines="full" formControlName="YAPFAQ_4">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_4.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Andare in giro per la stanza </h3>
+    <select lines="full" formControlName="YAPFAQ_5">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_5.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Lavarmi i capelli: </h3>
+    <select lines="full" formControlName="YAPFAQ_6">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_6.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> uscire dalla stanza: </h3>
+    <select lines="full" formControlName="YAPFAQ_7">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_7.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Essere pronto a far delle cose senza necessità di riposarmi </h3>
+    <select lines="full" formControlName="YAPFAQ_8">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_8.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Infilarmi i pantaloni: </h3>
+    <select lines="full" formControlName="YAPFAQ_9">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_9.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Fare i compiti o delle faccende domestiche: </h3>
+    <select lines="full" formControlName="YAPFAQ_10">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_10.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Girarmi nel letto: </h3>
+    <select lines="full" formControlName="YAPFAQ_11">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_11.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  
+  <ion-item >
+    <h3> Infilarmi o cambiare la maglietta: </h3>
+    <select lines="full" formControlName="YAPFAQ_12">
+      <option value="0"> 0 - Facile</option>
+      <option value="1"> 1 - Un pò faticoso </option>
+      <option value="2"> 2 - Piuttosto fatico </option>
+      <option value="3"> 3 - Molto fatico </option>
+      <option value="4"> 4 - Estremamente faticoso</option>
+    </select>
+  </ion-item>
+  <span class="error" *ngIf="checkAnswer && errorCtr.YAPFAQ_12.errors?.required">
+    Campo obbligatorio, selezionare una risposta.
+  </span>
+  <p></p>
+  <button (click)="indietro()" class="buttonBack">Indietro </button>
+  <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+<!-----------------------------------Pagina 3-------------------------------------------------->
+  <div *ngIf="controlloPagina==3"> 
+    <!-- CALI -->
+    <h2>CALI </h2>
+    <ion-item >
+      <h3> Attività fisica: </h3>
+      <select lines="full" formControlName="cali_1">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_1.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Fare qualcosa con gli amici: </h3>
+      <select lines="full" formControlName="cali_2">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_2.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Camminata veloce: </h3>
+      <select lines="full" formControlName="cali_3">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_3.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Mangiare regolarmente: </h3>
+      <select lines="full" formControlName="cali_4">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_4.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Dormire regolarmente: </h3>
+      <select lines="full" formControlName="cali_5">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_5.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Fare i compiti scolastici: </h3>
+      <select lines="full" formControlName="cali_6">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_6.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Camminare per 1-2 isolati: </h3>
+      <select lines="full" formControlName="cali_7">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_7.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Andare in autobus o automobile: </h3>
+      <select lines="full" formControlName="cali_8">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_8.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Stare sveglio tutto il giorno: </h3>
+     <p>(senza sonnellini o riposi)</p>
+      <select lines="full" formControlName="cali_9">
+        <option value="0"> 0 - Facile</option>
+        <option value="1"> 1 - Un pò faticoso </option>
+        <option value="2"> 2 - Piuttosto fatico </option>
+        <option value="3"> 3 - Molto fatico </option>
+        <option value="4"> 4 - Estremamente faticoso</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.cali_9.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+  
+    <button (click)="indietro()" class="buttonBack">Indietro </button>
+    <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+  <!-------------------------Pagina 4-------------------------------------------------->
+  <div *ngIf="controlloPagina==4">
+    <h2> PedsQL</h2>
+    <h2>Salute e attività fisica (Problemi con..)</h2>
+
+    <ion-item >
+      <h3> Il camminare per più di un isolato: </h3>
+      <select lines="full" formControlName="ped1sql_1">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_1.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Il correre: </h3>
+      <select lines="full" formControlName="ped1sql_2">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_2.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Fare sport o attività fisica: </h3>
+      <select lines="full" formControlName="ped1sql_3">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_3.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Sollevare pesi: </h3>
+      <select lines="full" formControlName="ped1sql_4">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_4.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Fare il bagno o la doccia senza aiuto: </h3>
+      <select lines="full" formControlName="ped1sql_5">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_5.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Stare male o avere dolore: </h3>
+      <select lines="full" formControlName="ped1sql_6">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_6.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Fare faccende o attività casalinghe: </h3>
+      <select lines="full" formControlName="ped1sql_7">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_7.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Sentirsi stanco: </h3>
+      <select lines="full" formControlName="ped1sql_8">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped1sql_8.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <button (click)="indietro()" class="buttonBack">Indietro </button>
+    <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+<!---------------------------------Pagina 5--------------------------------------------->
+  <div *ngIf="controlloPagina==5">
+    <h2> PedsQL</h2>
+    <h2>Stato d'animo (problemi con..)</h2>
+
+    <ion-item >
+      <h3> Sentirsi spaventato o preoccupato: </h3>
+      <select lines="full" formControlName="ped2sql_1">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped2sql_1.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3>Essere triste: </h3>
+      <select lines="full" formControlName="ped2sql_2">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped2sql_2.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Sentirsi arrabbiato: </h3>
+      <select lines="full" formControlName="ped2sql_3">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped2sql_3.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Avere difficoltà a dormire: </h3>
+      <select lines="full" formControlName="ped2sql_4">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped2sql_4.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Sentirsi preoccupato per ciò che portà accadermi: </h3>
+      <select lines="full" formControlName="ped2sql_5">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped2sql_5.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+    <p></p>
+    <button (click)="indietro()" class="buttonBack">Indietro </button>
+    <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+<!-----------------------------Pagina 6---------------------------------------->
+  <div *ngIf="controlloPagina==6">
+    <h2> PedsQL</h2>
+    <h2>Relazione con gli altri (problemi con..)</h2>
+
+    <ion-item >
+      <h3> Relazionarmi con i miei coetanei: </h3>
+      <select lines="full" formControlName="ped3sql_1">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped3sql_1.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3>I miei coetanei non voglio socializzare: </h3>
+      <select lines="full" formControlName="ped3sql_2">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped3sql_2.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> I miei coetanei si prendono gioco di me: </h3>
+      <select lines="full" formControlName="ped3sql_3">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped3sql_3.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Non riesco a fare cose che i miei coetanei fanno: </h3>
+      <select lines="full" formControlName="ped3sql_4">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped3sql_4.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> E' difficile tenere il passo dei miei coetanei: </h3>
+      <select lines="full" formControlName="ped3sql_5">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped3sql_5.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+    <p></p>
+    <button (click)="indietro()" class="buttonBack">Indietro </button>
+    <button (click)="avanti()" class="buttonBack">Avanti </button>
+  </div>
+<!--------------------------Pagina 7---------------------------------------------> 
+  <div *ngIf="controlloPagina==7">
+    <h2> PedsQL</h2>
+    <h2>Studio o lavoro (problemi con..)</h2>
+
+    <ion-item >
+      <h3> E' difficile prestare attenzione a scuola (o al lavoro): </h3>
+      <select lines="full" formControlName="ped4sql_1">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped4sql_1.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3>Dimenticare le cose da fare: </h3>
+      <select lines="full" formControlName="ped4sql_2">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped4sql_2.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Far fatica a tenere il passo con la scuola (o il lavoro): </h3>
+      <select lines="full" formControlName="ped4sql_3">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped4sql_3.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Non vado a scuola (o al lavoro) perchè non mi sento bene: </h3>
+      <select lines="full" formControlName="ped4sql_4">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped4sql_4.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+
+    <ion-item >
+      <h3> Non vado a scuola (o al lavoro) per andare in ospedale o dal mio medico: </h3>
+      <select lines="full" formControlName="ped4sql_5">
+        <option value="0"> 0 - Mai</option>
+        <option value="1"> 1 - Raramente </option>
+        <option value="2"> 2 - Qualche volta </option>
+        <option value="3"> 3 - Spesso </option>
+        <option value="4"> 4 - Sempre</option>
+      </select>    
+    </ion-item>
+    <span class="error" *ngIf="checkAnswer && errorCtr.ped4sql_5.errors?.required">
+      Campo obbligatorio, selezionare una risposta.
+    </span>
+    <button (click)="indietro()" class="buttonBack">Indietro </button>
+    <button (click)="avanti()" class="buttonBack">Avanti </button>
+    </div> 
+    <!---------------------------Pagina 8--------------------->
+  <div *ngIf="controlloPagina == 8"> 
+
+    <ion-item lines="full">
+      <ion-label>Commenti</ion-label>
+      <ion-input formControlName="commenti" type="text"></ion-input>
+    </ion-item>
+    <p></p>
+  <!-- Invio questionario -->
+  <ion-row>
+    <ion-col>
+      <ion-button (click)="presentAlertMultipleButtons()" color="danger" expand="block" >Invia questionario</ion-button>
+    </ion-col>
+  </ion-row>
+  <span class="error" *ngIf="submitted && !myForm.valid">
+    Campi obbligatori mancanti, selezionare tutti i campi obbligatori per continuare.
+   </span>
+  </div>
+  </form>
+</div>
+
+<!-- Questionario in visualizzazione -->
+<div *ngIf="isView">
+  <ul class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center"> 
+      Score dolore:
+      <span class="badge bg-primary rounded-pill">{{visit.done.nrs}} </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Frequenza dolore: 
+       <span class="badge bg-primary rounded-pill">{{visit.done.frequenza_dolore}}</span>
+     </li>
+     <li class="list-group-item d-flex justify-content-between align-items-center">
+       Durata dolore:
+       <span class="badge bg-primary rounded-pill">{{visit.done.durata_dolore}}</span>
+     </li>
+     <li class="list-group-item d-flex justify-content-between align-items-center">
+      PedsQL 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Salute e attività fisica: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.pedsql_1}}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Stato d'animo: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.pedsql_2}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+     Relazioni con gli altri: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.pedsql_3}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Studio o lavoro: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.pedsql_4}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Score totale: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.pedsql_totale}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Cali 9: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.cali}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      YAPFAQ: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.yapfaq}}</span> 
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      Commenti: 
+      <span class="badge bg-primary rounded-pill">{{visit.done.commenti}}</span> 
+    </li>
+  </ul>
+</div>
+</ion-content>

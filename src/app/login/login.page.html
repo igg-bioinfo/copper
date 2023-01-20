@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Log In</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h1> Benvenuto in Copper</h1>
+  <form class="center">
+    <ion-item lines="full">
+      <ion-label position="floating" >Name</ion-label>
+      <ion-input type="text" [(ngModel)]="user.username" name="username"  required></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input [(ngModel)]="user.password"type="password" name="password" required ></ion-input>
+    </ion-item>
+
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" color="favorite" expand="block"  (click)=" getAdminCredential()">Sign In</ion-button>
+       <!--    <a [routerLink]="['/forgot-password']" class="small-text">Forgot Password?</a>-->
+      </ion-col>
+    </ion-row>
+
+     <ion-row> 
+      <span class="error" *ngIf="error">
+       {{error }}
+      </span> 
+    </ion-row> 
+  </form>
+</ion-content> 
+
+
+<!-- 
+<body> 
+<div class="center">
+  <h1>Benvenuto in Copper</h1>
+  <form>
+    <div class="inputbox">
+      <input type="text" required="required" [(ngModel)]="user.username" name="username">
+      <span>Utente</span>
+    </div>
+    <div class="inputbox">
+      <input type="text" required="required"  type="password" [(ngModel)]="user.password"type="password" name="password">
+      <span>Password</span>
+    </div>
+    <div class="inputbox">
+      <input type="button" (click)=" getAdminCredential()" value="Log In">
+    </div>
+    <div> 
+      {{ error }}
+    </div>
+  </form>
+</div>
+</body>-->
