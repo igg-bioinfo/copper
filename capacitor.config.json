@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "copper",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

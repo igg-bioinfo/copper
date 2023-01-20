@@ -1,0 +1,7 @@
+{
+  "name": "copper",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
